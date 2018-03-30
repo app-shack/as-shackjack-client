@@ -1,5 +1,5 @@
-const { Dealer } = require("./dealer");
-const { Player } = require("./player");
+const { Dealer } = require("./dealer"),
+	{ Player } = require("./player");
 
 class State {
 	
