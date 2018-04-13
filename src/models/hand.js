@@ -2,8 +2,8 @@ const cardReducer = (accumulator, currentValue) => accumulator + currentValue.va
 
 class Hand {
 	
-	constructor() {
-		this.cards = [];
+	constructor(cards = []) {
+		this.cards = cards;
 	}
 	
 	addCard(card) {

@@ -4,9 +4,9 @@ config.socket = {};
 config.team = {};
 
 config.socket.host = "hostname";
-config.socket.url = "http://192.168.72.37";
+config.socket.url = "http://localhost";
 config.socket.port = 3000;
 
-config.team.name = "Team 17";
+config.team.name = "Team " + Math.floor(Math.random() * 100000);
 
 module.exports = config;

@@ -1,34 +1,54 @@
 let io = require("socket.io-client");
+const { Player } = require("./models/player");
 
 class Socket {
 	
-	constructor(url, teamName) {
-		this.socket = io.connect(url, { reconnect: true, query: "teamName=" + teamName });
-		
+	constructor(url, bot) {
+		this.bot = bot
+		this.socket = io.connect(url, { reconnect: true, query: "teamName=" + this.bot.teamName });
 		this.configureListeners();
 	}
 
 	configureListeners() {
-		this.socket.on("connect", function () {
-		    console.log("Connected to socket with id: " + this.socket.id);
-		}.bind(this));
+		 this.socket.on('connect', function() {
+			// console.log("connect");
+			this.socket.on("state", data => {
+				// console.log("state");
+			});
 
-		this.socket.on("state", function(data) {
-			console.log("State from socket with data: " + JSON.stringify(data));
-		}.bind(this));
+			this.socket.on("requestAction", function(data) {
+				this.onRequestAction(data)
+			}.bind(this));
 
-		this.socket.on("participants_updated", function(data) {
-			console.log("Participants updated with data: " + JSON.stringify(data));
+			this.socket.on("requestBet", function(data) {
+				this.onRequestBet(data)
+			}.bind(this));
 		}.bind(this));
-
-		this.socket.on("await_action", function() {
-			console.log("Awaiting action");
-		}.bind(this));
-
-		this.socket.on("disconnect", function() {
-			console.log("Disconnected from socket");
-		}.bind(this));		
 	}
+
+	
+
+	onRequestBet(state) {
+
+		let you = new Player(state.players.filter(player => {
+				return player.teamName === this.bot.teamName
+			})[0]);
+		let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
+
+		this.sendData("bet", {amount: this.bot.bet(you,  others)});
+	}
+
+	onRequestAction(state) {
+
+		let you = new Player(state.players.filter(player => {
+			return player.teamName === this.bot.teamName
+		})[0]);
+		let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
+		let dealer = state.dealersHand;
+
+		this.sendData("action", {action: this.bot.action(you, dealer, others)});
+	}
+
 
 	sendData(event, data) {
 		this.socket.emit(event, data);

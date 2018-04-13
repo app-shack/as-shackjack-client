@@ -6,7 +6,7 @@ class Card {
 	constructor(data) {
 		this.value = data.value;
 		this.suit = data.suit;
-		this.isHidden = data.isHidden;
+		// this.isHidden = data.isHidden;
 	}
 	
 }
