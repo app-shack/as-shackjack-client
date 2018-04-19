@@ -22,8 +22,18 @@ class Bot {
 		console.log("YOUR HAND: ", JSON.stringify(yourHand));
 		console.log("DEALERS HAND: ", JSON.stringify(dealerHand));
 		console.log("PLAYERS HANDS: ", JSON.stringify(playersHands));
-
-		return "hit"
+		
+		var min = 1;
+		var max = 10;
+		// and the formula is:
+		var random = Math.floor(Math.random() * (max - min + 1)) + min;
+		if (random < 4) {
+			return "stand"
+		} else if (random < 8) {
+			return "hit"
+ 		} else {
+ 			return "double"
+ 		}
 	}
 
 }
