@@ -6,7 +6,8 @@ run:
 	node app.js
 
 test:
-	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER) --timeout 3000
+	cd testserver/ && npm install
+	node testserver/src/app.js | node app.js
 
 tests: test
 

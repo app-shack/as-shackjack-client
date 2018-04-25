@@ -7,6 +7,7 @@ class Player {
 		this.bankRoll = data.bankRoll;
 		this.hand = new Hand(data.hand.cards);
 		this.bet = data.bet;
+		this.numberOfRounds = data.numberOfRounds;
 	}
 
 }
