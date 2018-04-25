@@ -6,6 +6,7 @@ run:
 	node app.js
 
 test:
+	npm install
 	cd testserver/ && npm install
 	node testserver/src/app.js | node app.js
 
