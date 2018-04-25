@@ -5,7 +5,7 @@ class Bot {
 		Enter your awesome team name here!
 	*/
 	constructor() {
-		this.teamName = "your_team_here_yolo";
+		this.teamName = "your_team_here";
 	}
 	
 	/*

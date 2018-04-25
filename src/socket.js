@@ -27,11 +27,11 @@ class Socket {
 			});
 
 			this.socket.on("requestAction", function(data) {
-				this.onRequestAction(data)
+				this.onRequestAction(data);
 			}.bind(this));
 
 			this.socket.on("requestBet", function(data) {
-				this.onRequestBet(data)
+				this.onRequestBet(data);
 			}.bind(this));
 
 			this.socket.on("round", function() {
@@ -41,20 +41,17 @@ class Socket {
 		}.bind(this));
 	}
 
-	
-
 	onRequestBet(state) {
 		let you = new Player(state.players.filter(player => {
 				return player.teamName === this.bot.teamName
-			})[0]);
+		})[0]);
 		// let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
 		this.sendData("bet", {amount: this.bot.bet(you)});
 	}
 
 	onRequestAction(state) {
-
 		let you = new Player(state.players.filter(player => {
-			return player.teamName === this.bot.teamName
+			return player.teamName === this.bot.teamName;
 		})[0]);
 		let dealer = state.dealersHand.hand.cards.filter(card => card != null && card.value > 1);
 		this.sendData("action", {action: this.bot.action(you, dealer)});
@@ -90,8 +87,6 @@ class Socket {
 	sendData(event, data) {
 		this.socket.emit(event, data);
 	}
-
-	// Actions
 
 	sendAction(action) {
 		let data = {
