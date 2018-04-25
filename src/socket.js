@@ -13,7 +13,7 @@ class Socket {
 		 this.socket.on('connect', function() {
 			// console.log("connect");
 			this.socket.on("state", data => {
-				// console.log("state");
+				this.onRequestState(data)
 			});
 
 			this.socket.on("requestAction", function(data) {
@@ -34,7 +34,6 @@ class Socket {
 				return player.teamName === this.bot.teamName
 			})[0]);
 		let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
-
 		this.sendData("bet", {amount: this.bot.bet(you,  others)});
 	}
 
@@ -43,10 +42,18 @@ class Socket {
 		let you = new Player(state.players.filter(player => {
 			return player.teamName === this.bot.teamName
 		})[0]);
-		let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
 		let dealer = state.dealersHand;
 
-		this.sendData("action", {action: this.bot.action(you, dealer, others)});
+		this.sendData("action", {action: this.bot.action(you, dealer)});
+	}
+
+	onRequestState(state) {
+		let you = new Player(state.players.filter(player => {
+			return player.teamName === this.bot.teamName
+		})[0]);
+		let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
+		let dealer = state.dealersHand;
+		this.bot.state(you, dealer, others)
 	}
 
 
