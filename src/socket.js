@@ -42,8 +42,7 @@ class Socket {
 		let you = new Player(state.players.filter(player => {
 			return player.teamName === this.bot.teamName
 		})[0]);
-		let dealer = state.dealersHand;
-
+		let dealer = state.dealersHand.hand.cards.filter(card => card != null && card.value > 1);
 		this.sendData("action", {action: this.bot.action(you, dealer)});
 	}
 
@@ -51,8 +50,9 @@ class Socket {
 		let you = new Player(state.players.filter(player => {
 			return player.teamName === this.bot.teamName
 		})[0]);
+		let dealer = state.dealersHand.hand.cards.filter(card => card != null && card.value > 1);
 		let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
-		let dealer = state.dealersHand;
+
 		this.bot.state(you, dealer, others)
 	}
 

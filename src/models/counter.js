@@ -18,7 +18,6 @@ class Counter {
 
 	addCard(card) {
 		if (card) {
-			console.log(card)
 			this.countCard(card.value)
 		}
 	}
