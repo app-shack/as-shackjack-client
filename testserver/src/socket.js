@@ -106,7 +106,7 @@ class Socket {
 			}, 5000);
 			socket.once("action", (data) => {
 				clearTimeout(timer)				
-				log("["+target.teamName+"] " + data.action + "s");
+				// log("["+target.teamName+"] " + data.action + "s");
 				done(data)
 				io.to(this.gameMasterSocketId).emit("action", {
 					target: target.teamName,
@@ -131,6 +131,7 @@ class Socket {
 	addParticipant(teamName, socketId) {
 		this.removeParticipant(teamName)
 		this.nodes.push({name:teamName, id: socketId});
+		console.log(this.nodes);
 		io.to(this.gameMasterSocketId).emit("playersUpdated", this.nodes.map(node => node.name))
 	}
 }

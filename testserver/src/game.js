@@ -95,21 +95,23 @@ class Game {
             })
             this.stateUpdated()
             exit()
+            sleep.msleep(config.defaultDelay)
             return
         }
         this.state = "bet"
-        return new Promise(function(done) {
+        // return new Promise(function(done) {
 
-            let target = this.players[index]
-            this.socket.requestBet(target, this.getGameState())
-                .then(data => {
-                    target.bumpNumberOfRounds()
-                    // target.action = null
-                    target.placeBet(data.amount)
-                    this.collectBets(index+1, exit)
-                    this.stateUpdated()
-                });
-        }.bind(this));
+        let target = this.players[index]
+        this.socket.requestBet(target, this.getGameState())
+            .then(data => {
+                sleep.msleep(config.defaultDelay)
+                target.bumpNumberOfRounds()
+                // target.action = null
+                target.placeBet(data.amount)
+                this.collectBets(index+1, exit)
+                this.stateUpdated()
+            });
+        // }.bind(this));
     }
 
     collectActions(index, exit) {
@@ -118,30 +120,33 @@ class Game {
             log("- ALL ACTIONS COLLECTED -\n");
             this.stateUpdated()
             exit()
+            sleep.msleep(config.defaultDelay)
             return
         }
 		this.state = "playing"
-        return new Promise(function(done) {
+        let target = this.players[index]
+            // if (target.cardSum() < 21) {
+            this.socket.requestAction(target, this.getGameState())
+            .then(data => {
+                this.performRound(target, data.action)
+                this.stateUpdated()
+                sleep.msleep(config.defaultDelay)
+                if(target.isBust() || data.action === "stand" || data.action === "double") {
+                    log("["+ target.teamName + "]" + (target.isBust() ? " is bust with " + target.cardSum() : " stands"))
+                    this.collectActions(index+1, exit)
+                } else {
+                    log("TARGET " + target.teamName + " has " + target.cardSum())
+                    this.collectActions(index, exit)
+                }
+            })
+        // return new Promise(function(done) {
 
-            let target = this.players[index]
-            if (target.cardSum() < 21) {
-                this.socket.requestAction(target, this.getGameState())
-                .then(data => {
-                    this.performRound(target, data.action)
-                    this.stateUpdated()
-                    if(target.isBust() || data.action === "stand" || data.action === "double") {
-                        log("["+ target.teamName + "]" + (target.isBust() ? " is bust with " + target.cardSum() : " stands"))
-                        this.collectActions(index+1, exit)
-                    } else {
-                        log("TARGET " + target.teamName + " has " + target.cardSum())
-                        this.collectActions(index, exit)
-                    }
-                })
-            } else {
-                this.collectActions(index+1, exit)
-            }
             
-        }.bind(this))
+            // } else {
+            //     this.collectActions(index+1, exit)
+            // }
+            
+        // }.bind(this))
     }
 
 
