@@ -6,7 +6,9 @@ run:
 	node app.js
 
 test:
-	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER) --timeout 3000
+	cd as-shackjack-backend/ && npm install
+	node as-shackjack-backend/src/app.js &
+	node app.js
 
 tests: test
 

@@ -37,7 +37,9 @@ class Counter {
 				this.count = 0
 			}
 		}
-		console.log("sum --- : " + this.sum)
+		if (this.sum === 380) {
+			console.log("sum --- : " + this.sum)
+		}
 	}
 
 	trueCount() {

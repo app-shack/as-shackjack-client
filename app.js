@@ -5,5 +5,5 @@ const {Bot} = require('./src/bot');
 
 let url = config.socket.url + ":" + config.socket.port;
 
-let socket = new Socket(url, new Bot(config.team.name));
+let socket = new Socket(url, new Bot());
 
