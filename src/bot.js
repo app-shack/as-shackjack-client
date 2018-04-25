@@ -22,7 +22,7 @@ class Bot {
     	Returns the action (string) performed by the bot for a given hand.
     	Possible actions: "hit", "double", "stand".
     	For a given hand, consider the variable named "value" to calculate the sum of your hand-
-    	REMEMBER that all Aces is considered as 11.
+    	REMEMBER that all Aces are considered as 11.
     */
 	action(you, dealer) {
 
