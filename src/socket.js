@@ -29,7 +29,7 @@ class Socket {
 	
 
 	onRequestBet(state) {
-
+		console.log("BET")
 		let you = new Player(state.players.filter(player => {
 				return player.teamName === this.bot.teamName
 			})[0]);
@@ -39,7 +39,7 @@ class Socket {
 	}
 
 	onRequestAction(state) {
-
+		console.log("ACTION")
 		let you = new Player(state.players.filter(player => {
 			return player.teamName === this.bot.teamName
 		})[0]);
