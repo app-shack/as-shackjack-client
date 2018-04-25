@@ -31,9 +31,13 @@ class Socket {
 			}.bind(this));
 
 			this.socket.on("requestBet", function(data) {
-				console.log(data)
 				this.onRequestBet(data)
 			}.bind(this));
+
+			this.socket.on("round", function() {
+				this.onRound();
+			}.bind(this))
+
 		}.bind(this));
 	}
 
@@ -43,8 +47,8 @@ class Socket {
 		let you = new Player(state.players.filter(player => {
 				return player.teamName === this.bot.teamName
 			})[0]);
-		let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
-		this.sendData("bet", {amount: this.bot.bet(you,  others)});
+		// let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
+		this.sendData("bet", {amount: this.bot.bet(you)});
 	}
 
 	onRequestAction(state) {
@@ -57,16 +61,32 @@ class Socket {
 	}
 
 	onRequestState(state) {
-		let you = new Player(state.players.filter(player => {
-			return player.teamName === this.bot.teamName
-		})[0]);
-		let dealer = state.dealersHand.hand.cards.filter(card => card != null && card.value > 1);
-		let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
 
-		this.bot.state(you, dealer, others)
+		if (state.players.filter(player => {return player.teamName === this.bot.teamName}).length > 0) {
+			let you = new Player(state.players.filter(player => {
+				return player.teamName === this.bot.teamName
+			})[0]);
+			let dealer = state.dealersHand.hand.cards.filter(card => card != null && card.value > 1);
+			let others = state.players.filter(player => player.teamName != this.bot.teamName).map(data => new Player(data));
+
+			this.bot.state(you, dealer, others)
+		} else {
+			
+			console.log(JSON.stringify(state));
+			let you = new Player(state.deadPlayers.filter(player => {
+				return player.teamName === this.bot.teamName
+			})[0]);
+			console.log(" - \n\n YOUR ARE DEAD -")
+			console.log(" - YOUR SURVIVED " + you.numberOfRounds + " ROUNDS -")
+			console.log(" - \n\n PLEASE PRESS CTRL+C - \n\n")
+		}
+		
+		
 	}
 
-
+	onRound() {
+		console.log("\n\n - ROUND OVER - \n\n")
+	}
 	sendData(event, data) {
 		this.socket.emit(event, data);
 	}

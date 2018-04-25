@@ -7,8 +7,7 @@ run:
 
 test:
 	cd as-shackjack-backend/ && npm install
-	node as-shackjack-backend/src/app.js &
-	node app.js
+	node as-shackjack-backend/src/app.js | node app.js
 
 tests: test
 
