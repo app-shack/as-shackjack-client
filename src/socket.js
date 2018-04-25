@@ -5,6 +5,16 @@ class Socket {
 	
 	constructor(url, bot) {
 		this.bot = bot
+		if (bot.teamName === "your_team_here") {
+			console.log();
+			console.log();
+			console.log();
+			console.log('\x1b[31m','You need to change your team name in bot.js file!');
+			console.log();
+			console.log();
+			console.log();
+			return
+		}
 		this.socket = io.connect(url, { reconnect: true, query: "teamName=" + this.bot.teamName });
 		this.configureListeners();
 	}
@@ -21,6 +31,7 @@ class Socket {
 			}.bind(this));
 
 			this.socket.on("requestBet", function(data) {
+				console.log(data)
 				this.onRequestBet(data)
 			}.bind(this));
 		}.bind(this));
@@ -29,7 +40,6 @@ class Socket {
 	
 
 	onRequestBet(state) {
-
 		let you = new Player(state.players.filter(player => {
 				return player.teamName === this.bot.teamName
 			})[0]);

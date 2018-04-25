@@ -1,17 +1,20 @@
 const strategy = require('./models/strategy').Strategy
 const {Counter} = require('./models/counter')
 
-
 class Bot {
-
-	constructor(teamName) {
-		this.teamName = teamName
+	/*
+		Enter your awesome team name here!
+	*/
+	constructor() {
+		this.teamName = "your_team_here_2";
 		this.counter = new Counter()
-		this.myHands = null
-		this.dealerHands = null
-		this.playerHands = null
+		this.reset()
 	}
-
+	reset() {
+		this.myHands = []
+		this.dealerHands = []
+		this.playerHands = []
+	}
 	/*
 	    Returns the bet (number) placed by the bot.
 	    Possible bets: 1, 10, 22.5, 42.
@@ -19,11 +22,8 @@ class Bot {
     */
 	bet(you, players) {
 		// New round i guess? whad upd!
-		this.myHands = null
-		this.dealerHands = null
-		this.playerHands = null
-
-
+		console.log("BET")
+		this.reset()
 		// Bankroll management?!
 		// Bet size is (counter.trueCount() - 1) * minBet
 		// minBet = (1/1000 of stacksize) * 0,25
@@ -49,6 +49,7 @@ class Bot {
     	Possible actions: "hit", "double", "stand".
     */
 	action(you, dealer) {
+		console.log("ACTION")
 		let yourHand = you.hand.cards
 
 		var dealerCount = 0
@@ -93,18 +94,13 @@ class Bot {
 	}
 
 	runCounter(oldHand, hand) {
-		if (!oldHand || oldHand.length === 0) {
-			this.counter.addHand(hand)
-			oldHand = hand
-		} else {
-			let currentHandCount = oldHand.length
-			if (hand.length > currentHandCount) {
-				let newCard = hand[currentHandCount]
-				this.counter.addCard(newCard)
-				oldHand = Object.assign({}, oldHand, hand)
-			}
+		var temp = []
+		for (var i = oldHand.length; i <= hand.length; i++) {
+			let newCard = hand[i]
+			this.counter.addCard(newCard)
+			temp = Object.assign({}, oldHand, hand)
 		}
-		return oldHand
+		return temp
 	}
 }
 
