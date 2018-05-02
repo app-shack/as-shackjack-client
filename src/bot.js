@@ -1,76 +1,66 @@
 
 
 class Bot {
-	/*
-		Enter your awesome team name here!
-	*/
-	constructor() {
-		this.teamName = "your_team_here";
-	}
-	
-	/*
-	    Returns the bet (number) placed by the bot.
-	    Possible bets: 1, 10, 22.5, 42.
-	    Minimum bet is 1.
-    */
-	bet(you) {
-		let bet = 100;
-        return bet;
-	}
 
-    /*
-    	Returns the action (string) performed by the bot for a given hand.
-    	Possible actions: "hit", "double", "stand".
-    	For a given hand, consider the variable named "value" to calculate the sum of your hand-
-    	REMEMBER that all Aces are considered as 11.
-    */
-	action(you, dealer) {
+    constructor(teamName) {
+        this.teamName = teamName
+    }
 
-			
-		/**	
-			SAMPLE CONTENT OF `you.hand.cards`
-			[
-				{"value":5,"realValue":5,"suit":"hearts","isHidden":false},
-				{"value":8,"realValue":8,"suit":"spades","isHidden":false}
-			]
-		*/
-        console.log("YOUR HAND: ", JSON.stringify(you.hand.cards));
-        console.log("YOUR BANKROLL: ", JSON.stringify(you.bankRoll));
-        console.log("YOUR BET: ", you.bet);
-        /**
-			SAMPLE CONTENT OF DEALERS HAND: 
-			[
-				{"value":10,"realValue":13,"suit":"clubs","isHidden":false}
-			]
-        */
-        console.log("DEALERS HAND: ", JSON.stringify(dealer));
 
-        
-            /*TODO: Implement your own logic for playing the game.
+    bet(you, players) {
+        // min bet is 1
+        let yourBet = you.bet
+        let playersBets = players.map(player => player.bet)
+        console.log("YOUR BET: ", JSON.stringify(yourBet));
+        console.log("PLAYERS BETS: ", JSON.stringify(playersBets));
 
-            # # # # # # # # # #
-            Example code: 
-            if (simon.jokes.filter(joke => joke.isFunny).length > 0) {
-                return "hit";
-            }
-            return "stand";
-            # # # # # # # # # #
-        	*/
-        return "hit";
-	}
+        return 11
+    }
 
-	/*
-		(Optional)
-		Called when ever a player recives a new card
-	*/
-	state(you, dealer, players) {
-		let yourHand = you.hand.cards
-		let playersHands = players.map(player => player.hand.cards)
-	}
+    action(you, dealer, players) {
+        // min bet is 1
+        let yourHand = you.hand.cards
+        let playersHands = players.map(player => player.hand.cards)
+        let dealerHand = dealer.hand.cards
+        console.log("YOUR HAND: ", JSON.stringify(yourHand));
+        console.log("DEALERS HAND: ", JSON.stringify(dealerHand));
+        //console.log("PLAYERS HANDS: ", JSON.stringify(playersHands));
 
+        return this.evaluateAction(yourHand, dealerHand, playersHands)
+        // var min = 1;
+        // var max = 10;
+        // // and the formula is:
+        // var random = Math.floor(Math.random() * (max - min + 1)) + min;
+        // if (random < 4) {
+        //     return "stand"
+        // } else if (random < 8) {
+        //     return "hit"
+        // } else {
+        //     return "double"
+        // }
+    }
+
+    evaluateAction(yourHand, dealersHand, playersHand) {
+
+        let yourHandValue = you.hand.sum()
+        let dealerHandValue = dealersHand.reduce( (a, b) => { return a.value + b.value }, 0);
+        let playersHandValue = playersHand.map(player => {player.reduce((a,b) => {return a+b}, 0)});
+        console.log("YOUR HAND VALUE: ", JSON.stringify(yourHandValue));
+        console.log("DEALERS HAND VALUE: ", JSON.stringify(dealerHandValue));
+        //console.log("PLAYERS HANDS VALUE: ", JSON.stringify(playersHands));
+
+        if ((yourHandValue > 12 && dealerHandValue < 7) || yourHandValue > 16) {
+            return "stand"
+        } else if (yourHandValue === 9 && dealerHandValue < 7) {
+            return "double"
+        } else {
+            return "hit"
+
+        }
+    }
 }
 
 
 module.exports = {
-	Bot
+    Bot
 };
