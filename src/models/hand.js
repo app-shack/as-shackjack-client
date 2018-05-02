@@ -18,9 +18,6 @@ class Hand {
         let handValue = this.cards.reduce(cardReducer, 0)
         let aces = this.cards.filter(card => card.value === 11)
 
-        //console.log("ACES IN HAND", this.cards)
-        console.log("ACES IN HAND", aces.length)
-
         for(let i = 0; i < aces.length; i++){
             if (handValue > 21) {
                 handValue -= 10
